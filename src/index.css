@@ -1,21 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@config "../../tailwind.config.js";
 
 @custom-variant dark (&:is(.dark *));
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
 
 :root {
   --sidebar: hsl(0 0% 98%);
@@ -26,6 +12,11 @@
   --sidebar-accent-foreground: hsl(240 5.9% 10%);
   --sidebar-border: hsl(220 13% 91%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
+
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+  --border: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
 }
 
 .dark {
@@ -40,6 +31,13 @@
 }
 
 @theme inline {
+  /* Core shadcn colors */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+
+  /* Sidebar colors */
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -52,9 +50,14 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  :focus-visible {
+    @apply ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
 }

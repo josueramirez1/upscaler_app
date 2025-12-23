@@ -120,11 +120,11 @@ export default function Hero() {
         ></div>
         <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
           <div className="hidden sm:mb-8 sm:flex sm:justify-center">
-            <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20 dark:text-gray-400 dark:ring-white/10 dark:hover:ring-white/20">
-              Announcing our next round of funding.{" "}
+            <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20 dark:text-gray-400 dark:ring-white/10 dark:hover:ring-white/20 outline-1">
+              Announcing our new features!{" "}
               <a
                 href="#"
-                className="font-semibold text-indigo-600 dark:text-indigo-400"
+                className="font-semibold text-blue-500 dark:text-indigo-400"
               >
                 <span aria-hidden="true" className="absolute inset-0" />
                 Read more <span aria-hidden="true">&rarr;</span>
@@ -142,13 +142,13 @@ export default function Hero() {
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <a
                 href="#"
-                className="rounded-md bg-blue-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-blue-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 dark:bg-blue-500 dark:hover:bg-blue-400 dark:focus-visible:outline-blue-500"
+                className="rounded-md bg-blue-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-xs hover:bg-blue-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 dark:bg-blue-400 dark:hover:bg-blue-300 dark:focus-visible:outline-blue-400"
               >
                 Get started
               </a>
               <a
                 href="#"
-                className="text-sm/6 font-semibold text-gray-900 dark:text-white"
+                className="text-sm font-semibold text-gray-900 shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2   rounded-md px-3.5 py-2.5 dark:text-white outline-1"
               >
                 Learn more <span aria-hidden="true">→</span>
               </a>
