@@ -6,7 +6,7 @@ import Login from "./pages/Login.tsx";
 import Signup from "./pages/Signup.tsx";
 import Dashboard from "./pages/Dasbboard.tsx";
 import { StrictMode } from "react";
-import { AuthProvider } from "./contexts/AuthContext.tsx";
+import { AuthProvider } from "./contexts/AuthProvider.tsx";
 
 const router = createBrowserRouter([
   {

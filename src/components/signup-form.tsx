@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router";
+import { useAuth } from "@/contexts/useAuth";
 
 export function SignupForm({
   className,
