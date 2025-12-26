@@ -1,4 +1,4 @@
-import { Client, Account, ID, Models } from "appwrite";
+import { Client, Account, ID } from "appwrite";
 
 const client = new Client()
   .setEndpoint("https://sfo.cloud.appwrite.io/v1") // Your API Endpoint
@@ -6,4 +6,4 @@ const client = new Client()
 
 const account = new Account(client);
 
-export { client, account, ID, Models };
+export { client, account, ID };

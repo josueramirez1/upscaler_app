@@ -5,12 +5,13 @@ import {
   useEffect,
   type ReactNode,
 } from "react";
-import { account, ID, Models } from "./lib/appwrite.ts";
+import { account, ID } from "../lib/appwrite.ts";
+import type { Models } from "appwrite";
 
 type CurrentUser = Models.User<Models.Preferences> | null;
 
 interface AuthContextType {
-  user: CurrentUser;
+  user: CurrentUser | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -19,19 +20,12 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within Auth Provider");
-  }
-  return context;
-}
-
-export function AuthProvider({ children }: { children: ReactNode }) {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  //useState
   const [user, setUser] = useState<CurrentUser>(null);
-  const [loading, setLoading] = useState<CurrentUser>(null);
+  const [loading, setLoading] = useState<CurrentUser | false>(null);
 
-  async function start() {
+  async function init() {
     try {
       const loggedIn = await account.get();
       setUser(loggedIn);
@@ -45,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = async (email: string, password: string) => {
     await account.createEmailPasswordSession(email, password);
-    await start(); // Re-fetch user to update state
+    await init(); // Re-fetch user to update state
   };
 
   const logout = async () => {
@@ -59,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    start();
+    init();
   }, []);
 
   const value = {
@@ -71,4 +65,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
+};
+
+export const useAuth = () => useContext(AuthContext);
