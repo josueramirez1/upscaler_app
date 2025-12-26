@@ -6,6 +6,7 @@ import Login from "./pages/Login.tsx";
 import Signup from "./pages/Signup.tsx";
 import Dashboard from "./pages/Dasbboard.tsx";
 import { StrictMode } from "react";
+import { AuthProvider } from "./AuthContext.tsx";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );
