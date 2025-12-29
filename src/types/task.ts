@@ -1,8 +1,9 @@
-export type Task = {
-  id: string;
-  title: string;
-  status: "todo" | "in_progress" | "done";
-  priority?: "low" | "medium" | "high";
-  assignee?: string;
-  estimateHours?: number;
-};
+//  export type Task = {
+//   id: string;
+//   task: string;
+//   status: "Todo" | "In Progress" | "Done";
+//   priority?: "Low" | "Medium" | "High";
+//   assignee?: string;
+//   estimateHours?: string;
+// };
+

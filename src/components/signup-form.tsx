@@ -10,13 +10,32 @@ import {
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router";
 import { useAuth } from "@/contexts/useAuth";
+import { useState } from "react";
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
+  const { register } = useAuth();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try{
+      await register(email, password);
+    } catch (error) {
+      console.error('Could not sign up using credentials', error);
+    }
+  };
+
   return (
-    <form className={cn("flex flex-col gap-6", className)} {...props}>
+    <form
+      onSubmit={handleSubmit}
+      className={cn("flex flex-col gap-6", className)}
+      {...props}
+    >
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Create your account</h1>
@@ -30,7 +49,14 @@ export function SignupForm({
         </Field>
         <Field>
           <FieldLabel htmlFor="email">Email</FieldLabel>
-          <Input id="email" type="email" placeholder="m@example.com" required />
+          <Input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            id="email"
+            type="email"
+            placeholder="m@example.com"
+            required
+          />
           <FieldDescription>
             We&apos;ll use this to contact you. We will not share your email
             with anyone else.
@@ -45,7 +71,13 @@ export function SignupForm({
         </Field>
         <Field>
           <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
-          <Input id="confirm-password" type="password" required />
+          <Input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            id="confirm-password"
+            type="password"
+            required
+          />
           <FieldDescription>Please confirm your password.</FieldDescription>
         </Field>
         <Field>

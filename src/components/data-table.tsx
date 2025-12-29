@@ -48,7 +48,6 @@ import {
   type VisibilityState,
 } from "@tanstack/react-table"
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
-import { toast } from "sonner"
 import { z } from "zod"
 
 import { useIsMobile } from "@/hooks/use-mobile"
@@ -104,14 +103,24 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs"
 
+// export const schema = z.object({
+//   id: z.number(),
+//   header: z.string(),
+//   type: z.string(),
+//   status: z.string(),
+//   target: z.string(),
+//   limit: z.string(),
+//   reviewer: z.string(),
+// })
+
 export const schema = z.object({
   id: z.number(),
   header: z.string(),
-  type: z.string(),
+  task: z.string(),
   status: z.string(),
-  target: z.string(),
-  limit: z.string(),
-  reviewer: z.string(),
+  priority: z.string(),
+  assignee: z.string(),
+  estimateHours: z.number(),
 })
 
 // Create a separate component for the drag handle
@@ -175,12 +184,12 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "type",
-    header: "Section Type",
+    accessorKey: "task",
+    header: "Tasks to Complete",
     cell: ({ row }) => (
       <div className="w-32">
         <Badge variant="outline" className="text-muted-foreground px-1.5">
-          {row.original.type}
+          {row.original.task}
         </Badge>
       </div>
     ),
@@ -200,82 +209,41 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     ),
   },
   {
-    accessorKey: "target",
-    header: () => <div className="w-full text-right">Target</div>,
+    accessorKey: "priority",
+    header: "Priority",
     cell: ({ row }) => (
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-            loading: `Saving ${row.original.header}`,
-            success: "Done",
-            error: "Error",
-          })
-        }}
-      >
-        <Label htmlFor={`${row.original.id}-target`} className="sr-only">
-          Target
-        </Label>
-        <Input
-          className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
-          defaultValue={row.original.target}
-          id={`${row.original.id}-target`}
-        />
-      </form>
+        <Badge variant="outline" className="text-muted-foreground px-1.5">
+          {row.original.priority}
+        </Badge>
     ),
   },
   {
-    accessorKey: "limit",
-    header: () => <div className="w-full text-right">Limit</div>,
-    cell: ({ row }) => (
-      <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-            loading: `Saving ${row.original.header}`,
-            success: "Done",
-            error: "Error",
-          })
-        }}
-      >
-        <Label htmlFor={`${row.original.id}-limit`} className="sr-only">
-          Limit
-        </Label>
-        <Input
-          className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
-          defaultValue={row.original.limit}
-          id={`${row.original.id}-limit`}
-        />
-      </form>
-    ),
-  },
-  {
-    accessorKey: "reviewer",
-    header: "Reviewer",
+    accessorKey: "assignee",
+    header: "Assignee",
     cell: ({ row }) => {
-      const isAssigned = row.original.reviewer !== "Assign reviewer"
+      const isAssigned = row.original.assignee !== "Assign reviewer"
 
       if (isAssigned) {
-        return row.original.reviewer
+        return row.original.assignee
       }
 
       return (
         <>
-          <Label htmlFor={`${row.original.id}-reviewer`} className="sr-only">
-            Reviewer
+          <Label htmlFor={`${row.original.id}-assignee`} className="sr-only">
+            Assignee
           </Label>
           <Select>
             <SelectTrigger
               className="w-38 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate"
               size="sm"
-              id={`${row.original.id}-reviewer`}
+              id={`${row.original.id}-assignee`}
             >
-              <SelectValue placeholder="Assign reviewer" />
+              <SelectValue placeholder="Assign" />
             </SelectTrigger>
             <SelectContent align="end">
               <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
-              <SelectItem value="Jamik Tashpulatov">
-                Jamik Tashpulatov
+              <SelectItem value="Josue Ramirez">
+                Josue Ramirez
               </SelectItem>
             </SelectContent>
           </Select>
@@ -727,10 +695,10 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-3">
-                <Label htmlFor="type">Type</Label>
-                <Select defaultValue={item.type}>
-                  <SelectTrigger id="type" className="w-full">
-                    <SelectValue placeholder="Select a type" />
+                <Label htmlFor="task">Task</Label>
+                <Select defaultValue={item.task}>
+                  <SelectTrigger id="task" className="w-full">
+                    <SelectValue placeholder="Select a task" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Table of Contents">
@@ -768,18 +736,18 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-3">
-                <Label htmlFor="target">Target</Label>
-                <Input id="target" defaultValue={item.target} />
+                <Label htmlFor="status">Status</Label>
+                <Input id="status" defaultValue={item.status} />
               </div>
               <div className="flex flex-col gap-3">
-                <Label htmlFor="limit">Limit</Label>
-                <Input id="limit" defaultValue={item.limit} />
+                <Label htmlFor="priority">Priority</Label>
+                <Input id="priority" defaultValue={item.priority} />
               </div>
             </div>
             <div className="flex flex-col gap-3">
-              <Label htmlFor="reviewer">Reviewer</Label>
-              <Select defaultValue={item.reviewer}>
-                <SelectTrigger id="reviewer" className="w-full">
+              <Label htmlFor="assignee">Assignee</Label>
+              <Select defaultValue={item.assignee}>
+                <SelectTrigger id="assignee" className="w-full">
                   <SelectValue placeholder="Select a reviewer" />
                 </SelectTrigger>
                 <SelectContent>
