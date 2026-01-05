@@ -1,7 +1,6 @@
 import * as React from "react"
 import {
   IconCamera,
-  IconChartBar,
   IconDashboard,
   IconDatabase,
   IconFileAi,
@@ -9,8 +8,7 @@ import {
   IconFileWord,
   IconFolder,
   IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
+  IconLayoutBoard,
   IconReport,
   IconSearch,
   IconSettings,
@@ -33,25 +31,20 @@ import {
 
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "Josue",
+    email: "josue67ramirez@gmail.com",
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
     {
-      title: "Dashboard",
+      title: "Inbox",
       url: "#",
       icon: IconDashboard,
     },
     {
-      title: "Lifecycle",
+      title: "Board",
       url: "#",
-      icon: IconListDetails,
-    },
-    {
-      title: "Analytics",
-      url: "#",
-      icon: IconChartBar,
+      icon: IconLayoutBoard,
     },
     {
       title: "Projects",
@@ -159,8 +152,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+                <img src="../public/upscaler-logo.png" className="size-5" alt="" />
+                <span className="text-base font-semibold">Upscaler Inc.</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
