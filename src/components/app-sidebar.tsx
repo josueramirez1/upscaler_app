@@ -39,20 +39,12 @@ const data = {
   },
   navMain: [
     {
-<<<<<<< HEAD
-      title: "Home",
-=======
       title: "Dashboard",
->>>>>>> parent of 2ae6f0b (updaing ui)
       url: "#",
       icon: IconDashboard,
     },
     {
-<<<<<<< HEAD
-      title: "Inbox",
-=======
       title: "Lifecycle",
->>>>>>> parent of 2ae6f0b (updaing ui)
       url: "#",
       icon: IconListDetails,
     },
@@ -62,7 +54,7 @@ const data = {
       icon: IconChartBar,
     },
     {
-      title: "Board",
+      title: "Projects",
       url: "#",
       icon: IconFolder,
     },
