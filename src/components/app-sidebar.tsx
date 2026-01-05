@@ -1,6 +1,7 @@
 import * as React from "react"
 import {
   IconCamera,
+  IconChartBar,
   IconDashboard,
   IconDatabase,
   IconFileAi,
@@ -8,7 +9,8 @@ import {
   IconFileWord,
   IconFolder,
   IconHelp,
-  IconLayoutBoard,
+  IconInnerShadowTop,
+  IconListDetails,
   IconReport,
   IconSearch,
   IconSettings,
@@ -31,20 +33,33 @@ import {
 
 const data = {
   user: {
-    name: "Josue",
-    email: "josue67ramirez@gmail.com",
+    name: "shadcn",
+    email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
   navMain: [
     {
+<<<<<<< HEAD
       title: "Home",
+=======
+      title: "Dashboard",
+>>>>>>> parent of 2ae6f0b (updaing ui)
       url: "#",
       icon: IconDashboard,
     },
     {
+<<<<<<< HEAD
       title: "Inbox",
+=======
+      title: "Lifecycle",
+>>>>>>> parent of 2ae6f0b (updaing ui)
       url: "#",
-      icon: IconLayoutBoard,
+      icon: IconListDetails,
+    },
+    {
+      title: "Analytics",
+      url: "#",
+      icon: IconChartBar,
     },
     {
       title: "Board",
@@ -152,8 +167,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               className="data-[slot=sidebar-menu-button]:!p-1.5"
             >
               <a href="#">
-                <img src="../public/upscaler-logo.png" className="size-5" alt="" />
-                <span className="text-base font-semibold">Upscaler Inc.</span>
+                <IconInnerShadowTop className="!size-5" />
+                <span className="text-base font-semibold">Acme Inc.</span>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
