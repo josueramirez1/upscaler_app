@@ -37,17 +37,17 @@ const data = {
   },
   navMain: [
     {
-      title: "Inbox",
+      title: "Home",
       url: "#",
       icon: IconDashboard,
     },
     {
-      title: "Board",
+      title: "Inbox",
       url: "#",
       icon: IconLayoutBoard,
     },
     {
-      title: "Projects",
+      title: "Board",
       url: "#",
       icon: IconFolder,
     },
