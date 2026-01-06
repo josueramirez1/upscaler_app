@@ -4,7 +4,7 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { PanelLeftIcon } from "lucide-react"
-import type { Page } from "@/types/navigation";
+
 import { useIsMobile } from "@/hooks/use-mobile"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -31,9 +31,6 @@ const SIDEBAR_WIDTH = "16rem"
 const SIDEBAR_WIDTH_MOBILE = "18rem"
 const SIDEBAR_WIDTH_ICON = "3rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
-
-
-
 
 type SidebarContextProps = {
   state: "expanded" | "collapsed"
@@ -307,29 +304,19 @@ function SidebarRail({ className, ...props }: React.ComponentProps<"button">) {
   )
 }
 
-type Props = React.ComponentProps<"main"> & {
-  onNavigate: (page: Page) => void;
-   children?: React.ReactNode
-};
-
-function SidebarInset({
-  className,
-  onNavigate,
-  children,
-  ...props
-}: Props) {
+function SidebarInset({ className, ...props }: React.ComponentProps<"main">) {
   return (
-    <main className={cn(
+    <main
+      data-slot="sidebar-inset"
+      className={cn(
         "bg-background relative flex w-full flex-1 flex-col",
         "md:peer-data-[variant=inset]:m-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow-sm md:peer-data-[variant=inset]:peer-data-[state=collapsed]:ml-2",
         className
-  )} {...props}>
-      {children}
-    </main>
-  );
+      )}
+      {...props}
+    />
+  )
 }
-
-  
 
 function SidebarInput({
   className,
