@@ -6,9 +6,11 @@ import Login from "./pages/Login.tsx";
 import Signup from "./pages/Signup.tsx";
 import { StrictMode } from "react";
 import { AuthProvider } from "./contexts/AuthProvider.tsx";
-import DashboardLayout from "./pages/DashboardLayout.tsx"
+import DashboardLayout from "./pages/DashboardLayout.tsx";
 import DashboardHome from "./pages/DashboardHome.tsx";
 import InboxPage from "./pages/InboxPage.tsx";
+import { ThemeProvider } from "./ThemeProvider";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -26,16 +28,18 @@ const router = createBrowserRouter([
     path: "/dashboard",
     element: <DashboardLayout />,
     children: [
-      {index: true, element: <DashboardHome />},
-      {path: "inbox", element: <InboxPage />}
-    ]
+      { index: true, element: <DashboardHome /> },
+      { path: "inbox", element: <InboxPage /> },
+    ],
   },
 ]);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </ThemeProvider>
   </StrictMode>
 );
