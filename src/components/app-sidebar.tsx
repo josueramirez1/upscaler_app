@@ -30,14 +30,9 @@ const items = [
     icon: Calendar,
   },
   {
-    title: "Calendar",
+    title: "Logout",
     url: "#",
     icon: Calendar,
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings,
   },
 ];
 
@@ -46,7 +41,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
+          <SidebarGroupLabel>Upscaler</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
