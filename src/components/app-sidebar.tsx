@@ -25,14 +25,14 @@ const items = [
     icon: Inbox,
   },
   {
-    title: "Calendar",
-    url: "#",
+    title: "Board",
+    url: "/dashboard/board",
     icon: Calendar,
   },
   {
-    title: "Search",
+    title: "Calendar",
     url: "#",
-    icon: Search,
+    icon: Calendar,
   },
   {
     title: "Settings",

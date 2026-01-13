@@ -1,7 +1,7 @@
 import KanbanBoardPage from "@/components/MyKanbanEx";
 
-const DashboardHome = () => {
+const BoardPage = () => {
   return <KanbanBoardPage />;
 };
 
-export default DashboardHome;
+export default BoardPage;
