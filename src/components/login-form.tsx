@@ -8,32 +8,38 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router";
-import {useAuth} from "@/contexts/useAuth.tsx";
-import {useState} from "react";
+import { Link, useNavigate } from "react-router";
+import { useAuth } from "@/contexts/useAuth.tsx";
+import { useState } from "react";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const  { login } = useAuth()
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await login(email, password);
-    } catch(error) {
-      console.error('Could not login with credentials', error);
+      navigate("/dashboard");
+    } catch (error) {
+      console.error("Could not login with credentials", error);
+      setEmail("");
+      setPassword("");
     }
-  }
-
+  };
 
   return (
-    <form onSubmit={handleLogin} className={cn("flex flex-col gap-6", className)} {...props}>
+    <form
+      onSubmit={handleLogin}
+      className={cn("flex flex-col gap-6", className)}
+      {...props}
+    >
       <FieldGroup>
         <div className="flex flex-col items-center gap-1 text-center">
           <h1 className="text-2xl font-bold">Login to your account</h1>
@@ -43,7 +49,14 @@ export function LoginForm({
         </div>
         <Field>
           <FieldLabel htmlFor="email">Email</FieldLabel>
-          <Input value={email} onChange={e => setEmail(e.target.value)} id="email" type="email" placeholder="m@example.com" required />
+          <Input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            id="email"
+            type="email"
+            placeholder="m@example.com"
+            required
+          />
         </Field>
         <Field>
           <div className="flex items-center">
@@ -55,7 +68,13 @@ export function LoginForm({
               Forgot your password?
             </a>
           </div>
-          <Input value={password} onChange={e => setPassword(e.target.value)} id="password" type="password" required />
+          <Input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            id="password"
+            type="password"
+            required
+          />
         </Field>
         <Field>
           <Button type="submit">Login</Button>

@@ -1,4 +1,5 @@
 import { Calendar, Home, Inbox, LogOut } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 import {
   Sidebar,
@@ -10,20 +11,20 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useAuth } from "@/contexts/useAuth";
 
 type LinkItem = {
   type: "link";
   title: string;
-  icon: React.ComponentType;
+  icon: LucideIcon;
   url: string;
 };
 
 type ActionItem = {
   type: "action";
   title: string;
-  icon: React.ComponentType;
+  icon: LucideIcon;
   action: "logout";
 };
 
@@ -58,10 +59,12 @@ const items: NavItem[] = [
 
 export function AppSidebar() {
   const { logout } = useAuth();
+  const navigate = useNavigate();
   const handleLogout: () => Promise<void> = async () => {
     try {
       console.log("Session ended");
       await logout();
+      navigate("/");
     } catch (error) {
       console.error("Could not sign up using credentials", error);
     }
@@ -77,8 +80,9 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    {item.action === "logout" ? (
+                    {item.type === "action" ? (
                       <button key={item.title} onClick={handleLogout}>
+                        <item.icon className="h-4 w-4 stroke-current" />
                         <span>{item.title}</span>
                       </button>
                     ) : (
