@@ -1,4 +1,4 @@
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import { Calendar, Home, Inbox, LogOut } from "lucide-react";
 
 import {
   Sidebar,
@@ -11,32 +11,62 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { Link } from "react-router";
+import { useAuth } from "@/contexts/useAuth";
 
-// Menu items.
-const items = [
+type LinkItem = {
+  type: "link";
+  title: string;
+  icon: React.ComponentType;
+  url: string;
+};
+
+type ActionItem = {
+  type: "action";
+  title: string;
+  icon: React.ComponentType;
+  action: "logout";
+};
+
+type NavItem = LinkItem | ActionItem;
+
+const items: NavItem[] = [
   {
+    type: "link",
     title: "Home",
     url: "/dashboard",
     icon: Home,
   },
   {
+    type: "link",
     title: "Inbox",
     url: "/dashboard/inbox",
     icon: Inbox,
   },
   {
+    type: "link",
     title: "Board",
     url: "/dashboard/board",
     icon: Calendar,
   },
   {
+    type: "action",
     title: "Logout",
-    url: "#",
-    icon: Calendar,
+    icon: LogOut,
+    action: "logout",
   },
 ];
 
 export function AppSidebar() {
+  const { logout } = useAuth();
+  const handleLogout: () => Promise<void> = async () => {
+    try {
+      console.log("Session ended");
+      await logout();
+    } catch (error) {
+      console.error("Could not sign up using credentials", error);
+    }
+  };
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -47,10 +77,16 @@ export function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <Link to={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
+                    {item.action === "logout" ? (
+                      <button key={item.title} onClick={handleLogout}>
+                        <span>{item.title}</span>
+                      </button>
+                    ) : (
+                      <Link key={item.title} to={item.url}>
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </Link>
+                    )}
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

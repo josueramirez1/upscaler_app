@@ -11,22 +11,26 @@ import { Input } from "@/components/ui/input";
 import { Link } from "react-router";
 import { useAuth } from "@/contexts/useAuth";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"form">) {
   const { register } = useAuth();
+  const navigate = useNavigate();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  let [email, setEmail] = useState("");
+  let [password, setPassword] = useState("");
+  let [name, setName] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try{
-      await register(email, password);
+    try {
+      await register(email, password, name);
+      navigate("/dashboard");
     } catch (error) {
-      console.error('Could not sign up using credentials', error);
+      console.error("Could not sign up using credentials", error);
     }
   };
 
@@ -45,7 +49,14 @@ export function SignupForm({
         </div>
         <Field>
           <FieldLabel htmlFor="name">Full Name</FieldLabel>
-          <Input id="name" type="text" placeholder="John Doe" required />
+          <Input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            id="name"
+            type="text"
+            placeholder="John Doe"
+            required
+          />
         </Field>
         <Field>
           <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -81,7 +92,9 @@ export function SignupForm({
           <FieldDescription>Please confirm your password.</FieldDescription>
         </Field>
         <Field>
-          <Button type="submit">Create Account</Button>
+          <Button className="outline" type="submit">
+            Create Account
+          </Button>
         </Field>
         <FieldSeparator>Or continue with</FieldSeparator>
         <Field>

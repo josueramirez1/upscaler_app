@@ -21,17 +21,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const login = async (email: string, password: string) => {
-    await account.createEmailPasswordSession(email, password);
+    await account.createEmailPasswordSession({ email, password });
     await init();
   };
 
   const logout = async () => {
-    await account.deleteSession("current");
+    await account.deleteSession({
+      sessionId: "current",
+    });
     setUser(null);
   };
 
-  const register = async (email: string, password: string) => {
-    await account.create(ID.unique(), email, password);
+  const register = async (email: string, password: string, name: string) => {
+    await account.create({ userId: ID.unique(), email, password, name });
     await login(email, password);
   };
 
