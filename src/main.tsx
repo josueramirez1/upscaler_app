@@ -12,34 +12,24 @@ import InboxPage from "./pages/InboxPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import BoardPage from "./pages/BoardPage.tsx";
 import PrivateRoute from "./pages/PrivateRoute.tsx";
+import NotFoundPage from "./pages/NotFoundPage.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <PrivateRoute>
-        <App />
-      </PrivateRoute>
-    ),
+    element: <App />,
   },
   {
     path: "/login",
-    element: (
-      <PrivateRoute>
-        <Login />
-      </PrivateRoute>
-    ),
+    element: <Login />,
   },
   {
     path: "/signup",
-    element: (
-      <PrivateRoute>
-        <Signup />
-      </PrivateRoute>
-    ),
+    element: <Signup />,
   },
+  { path: "*", element: <NotFoundPage /> },
   {
-    path: "/dashboard/",
+    path: "/dashboard",
     element: (
       <PrivateRoute>
         <DashboardLayout />

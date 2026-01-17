@@ -8,7 +8,6 @@ type CurrentUser = Models.User<Models.Preferences> | null;
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<CurrentUser>(null);
   const [loading, setLoading] = useState<boolean>(true);
-  const [session, setSession] = useState<CurrentUser>(null);
 
   async function init() {
     try {
@@ -22,20 +21,40 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }
 
   const login = async (email: string, password: string) => {
-    await account.createEmailPasswordSession({ email, password });
-    await init();
+    try {
+      await account.createEmailPasswordSession({
+        email,
+        password,
+      });
+    } catch (error) {
+      console.error("There was a problem logging in", error);
+    }
+
+    const currentUser = await account.get();
+    setUser(currentUser);
   };
 
   const logout = async () => {
-    await account.deleteSession({
-      sessionId: "current",
-    });
+    try {
+      await account.deleteSession({
+        sessionId: "current",
+      });
+    } catch (error) {
+      console.error("There was a problem logging out", error);
+    }
+
     setUser(null);
   };
 
   const register = async (email: string, password: string, name: string) => {
-    await account.create({ userId: ID.unique(), email, password, name });
-    await login(email, password);
+    try {
+      await account.create({ userId: ID.unique(), email, password, name });
+      await account.createEmailPasswordSession({ email, password });
+      const currentUser = await account.get();
+      setUser(currentUser);
+    } catch (error) {
+      console.error("There was a problem registering", error);
+    }
   };
 
   useEffect(() => {
@@ -47,7 +66,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         user,
         loading,
-        session,
         login,
         logout,
         register,
