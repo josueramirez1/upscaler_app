@@ -11,23 +11,40 @@ import DashboardLayout from "./pages/DashboardLayout.tsx";
 import InboxPage from "./pages/InboxPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import BoardPage from "./pages/BoardPage.tsx";
+import PrivateRoute from "./pages/PrivateRoute.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: (
+      <PrivateRoute>
+        <App />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/login",
-    element: <Login />,
+    element: (
+      <PrivateRoute>
+        <Login />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/signup",
-    element: <Signup />,
+    element: (
+      <PrivateRoute>
+        <Signup />
+      </PrivateRoute>
+    ),
   },
   {
     path: "/dashboard/",
-    element: <DashboardLayout />,
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
     children: [
       { index: true, element: <HomePage /> },
       { path: "inbox", element: <InboxPage /> },
@@ -43,5 +60,5 @@ createRoot(document.getElementById("root")!).render(
         <RouterProvider router={router} />
       </AuthProvider>
     </ThemeProvider>
-  </StrictMode>
+  </StrictMode>,
 );

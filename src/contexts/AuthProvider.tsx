@@ -8,6 +8,7 @@ type CurrentUser = Models.User<Models.Preferences> | null;
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<CurrentUser>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [session, setSession] = useState<CurrentUser>(null);
 
   async function init() {
     try {
@@ -46,6 +47,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       value={{
         user,
         loading,
+        session,
         login,
         logout,
         register,
