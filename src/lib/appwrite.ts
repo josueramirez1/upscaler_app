@@ -1,8 +1,10 @@
-import { Client, Account, ID } from "appwrite";
+import { Client, Account, ID, Query } from "appwrite";
+
+import { KanbanList, KanbanTask } from "@/types/task";
 
 const client = new Client()
-  .setEndpoint("https://sfo.cloud.appwrite.io/v1") //  API Endpoint
-  .setProject("694e1ea50034c25852e4"); //  project ID
+  .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT) //  API Endpoint
+  .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID); //  project ID
 
 const account = new Account(client);
 

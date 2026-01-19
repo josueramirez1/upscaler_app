@@ -1,9 +1,19 @@
-//  export type Task = {
-//   id: string;
-//   task: string;
-//   status: "Todo" | "In Progress" | "Done";
-//   priority?: "Low" | "Medium" | "High";
-//   assignee?: string;
-//   estimateHours?: string;
-// };
+import { Models } from "appwrite";
 
+// The "List" (Column)
+export interface KanbanList extends Models.Document {
+  name: string;
+  position: number;
+  boardId: string;
+  // We add this array manually in the frontend to store the tasks for this column
+  tasks: KanbanTask[];
+}
+
+// The "Task" (Card)
+export interface KanbanTask extends Models.Document {
+  title: string;
+  content?: string;
+  position: number;
+  listId: string;
+  boardId: string;
+}
