@@ -55,6 +55,9 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
+import { getBoardData } from "@/lib/appwrite";
+import type { KanbanList } from "@/types/task";
+import { useParams } from "react-router";
 
 // Types
 type Card = {
@@ -68,6 +71,10 @@ type Column = {
   color: KanbanBoardCircleColor;
   items: Card[];
 };
+
+interface BoardProps {
+  boardId: string;
+}
 
 export default function KanbanBoardPage() {
   return (
@@ -83,123 +90,37 @@ export default function KanbanBoardPage() {
   );
 }
 
-export function MyKanbanBoard() {
-  const [columns, setColumns] = useState<Column[]>([
-    {
-      id: "eowdjiak9f9jr27po347jr47",
-      title: "Backlog",
-      color: "primary",
-      items: [
-        {
-          id: "1",
-          title: "Add a new column",
-        },
-        {
-          id: "2",
-          title: "Add a new card",
-        },
-        {
-          id: "3",
-          title: "Move a card to another column",
-        },
-        {
-          id: "4",
-          title: "Delete a column",
-        },
-        {
-          id: "5",
-          title: "Delete a card",
-        },
-        {
-          id: "6",
-          title: "Update a card title",
-        },
-        {
-          id: "7",
-          title: "Edit a column title",
-        },
-        {
-          id: "8",
-          title: `Check out
+export const MyKanbanBoard: React.FC<BoardProps> = () => {
+  const [columns, setColumns] = useState<KanbanList[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const scrollContainerReference = useRef<HTMLDivElement>(null);
+  const [activeCardId, setActiveCardId] = useState<string>("");
+  const originalCardPositionReference = useRef<{
+    columnId: string;
+    cardIndex: number;
+  } | null>(null);
+  const { onDragStart, onDragEnd, onDragCancel, onDragOver } = useDndEvents();
+  const jsLoaded = useJsLoaded();
 
-multi line
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getBoardData();
+        console.log("Processed Board Data:", data);
+        setColumns(data);
+      } catch (error) {
+        console.error("Error fetching board:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-card content`,
-        },
-        {
-          id: "9",
-          title: "Move a card between two other cards",
-        },
-        {
-          id: "10",
-          title: "Turn on screen reader and listen to the announcements",
-        },
-        {
-          id: "11",
-          title: "Notice how with enough cards, the colomns become scrollable",
-        },
-      ],
-    },
-    {
-      id: "ad1wx5djclsilpu8sjmp9g70",
-      title: "To Do",
-      color: "blue",
-      items: [
-        {
-          id: "12",
-          title: "Install the Shadcn Kanban board into your project",
-        },
-        {
-          id: "13",
-          title: "Build amazing apps",
-        },
-      ],
-    },
-    {
-      id: "zm3vyxyo0x47tl60340w8jrl",
-      title: "In Progress",
-      color: "red",
-      items: [
-        {
-          id: "14",
-          title: "Make some magic",
-        },
-        {
-          id: "15",
-          title: "Stay healthy",
-        },
-        {
-          id: "16",
-          title: "Drink water 💧",
-        },
-      ],
-    },
-    {
-      id: "rzaksqoyfvgjbw466puqu9uk",
-      title: "In Review",
-      color: "yellow",
-      items: [],
-    },
-    {
-      id: "w27comaw16gy2jxphpmt9xxv",
-      title: "Done",
-      color: "green",
-      items: [
-        {
-          id: "17",
-          title: "Hey, the column to the left of me is empty!",
-        },
-        {
-          id: "18",
-          title:
-            "And using the button to the right of me, you can add columns.",
-        },
-      ],
-    },
-  ]);
+    fetchData();
+  }, []);
+
+  if (isLoading) return <div>Loading Board...</div>;
 
   // Scroll to the right when a new column is added.
-  const scrollContainerReference = useRef<HTMLDivElement>(null);
 
   function scrollRight() {
     if (scrollContainerReference.current) {
@@ -234,7 +155,7 @@ card content`,
   function handleDeleteColumn(columnId: string) {
     flushSync(() => {
       setColumns((previousColumns) =>
-        previousColumns.filter((column) => column.id !== columnId)
+        previousColumns.filter((column) => column.id !== columnId),
       );
     });
 
@@ -244,8 +165,8 @@ card content`,
   function handleUpdateColumnTitle(columnId: string, title: string) {
     setColumns((previousColumns) =>
       previousColumns.map((column) =>
-        column.id === columnId ? { ...column, title } : column
-      )
+        column.id === columnId ? { ...column, title } : column,
+      ),
     );
   }
 
@@ -261,8 +182,8 @@ card content`,
               ...column,
               items: [...column.items, { id: createId(), title: cardContent }],
             }
-          : column
-      )
+          : column,
+      ),
     );
   }
 
@@ -271,8 +192,8 @@ card content`,
       previousColumns.map((column) =>
         column.items.some((card) => card.id === cardId)
           ? { ...column, items: column.items.filter(({ id }) => id !== cardId) }
-          : column
-      )
+          : column,
+      ),
     );
   }
 
@@ -300,7 +221,7 @@ card content`,
             items: column.items.filter(({ id }) => id !== card.id),
           };
         }
-      })
+      }),
     );
   }
 
@@ -311,23 +232,17 @@ card content`,
           ? {
               ...column,
               items: column.items.map((card) =>
-                card.id === cardId ? { ...card, title: cardTitle } : card
+                card.id === cardId ? { ...card, title: cardTitle } : card,
               ),
             }
-          : column
-      )
+          : column,
+      ),
     );
   }
 
   /*
   Moving cards with the keyboard.
   */
-  const [activeCardId, setActiveCardId] = useState<string>("");
-  const originalCardPositionReference = useRef<{
-    columnId: string;
-    cardIndex: number;
-  } | null>(null);
-  const { onDragStart, onDragEnd, onDragCancel, onDragOver } = useDndEvents();
 
   // This helper returns the appropriate overId after a card is placed.
   // If there's another card below, return that card's id, otherwise return the column's id.
@@ -357,7 +272,7 @@ card content`,
 
   function moveActiveCard(
     cardId: string,
-    direction: "ArrowLeft" | "ArrowRight" | "ArrowUp" | "ArrowDown"
+    direction: "ArrowLeft" | "ArrowRight" | "ArrowUp" | "ArrowDown",
   ) {
     const { columnIndex, cardIndex } = findCardPosition(cardId);
     if (columnIndex === -1 || cardIndex === -1) return;
@@ -376,7 +291,7 @@ card content`,
       case "ArrowDown": {
         newCardIndex = Math.min(
           cardIndex + 1,
-          columns[columnIndex].items.length - 1
+          columns[columnIndex].items.length - 1,
         );
 
         break;
@@ -386,7 +301,7 @@ card content`,
         // Keep same cardIndex if possible, or if out of range, insert at end
         newCardIndex = Math.min(
           newCardIndex,
-          columns[newColumnIndex].items.length
+          columns[newColumnIndex].items.length,
         );
 
         break;
@@ -395,7 +310,7 @@ card content`,
         newColumnIndex = Math.min(columnIndex + 1, columns.length - 1);
         newCardIndex = Math.min(
           newCardIndex,
-          columns[newColumnIndex].items.length
+          columns[newColumnIndex].items.length,
         );
 
         break;
@@ -408,16 +323,12 @@ card content`,
     });
 
     // Find the card's new position and announce it.
-    const { columnIndex: updatedColumnIndex, cardIndex: updatedCardIndex } =
-      findCardPosition(cardId);
-    const overId = getOverId(columns[updatedColumnIndex], updatedCardIndex);
-
     onDragOver(cardId, overId);
   }
 
   function handleCardKeyDown(
     event: KeyboardEvent<HTMLButtonElement>,
-    cardId: string
+    cardId: string,
   ) {
     const { key } = event;
 
@@ -497,45 +408,41 @@ card content`,
     setActiveCardId("");
   }
 
-  const jsLoaded = useJsLoaded();
-
   return (
     <KanbanBoard ref={scrollContainerReference}>
-      {columns.map((column) =>
-        jsLoaded ? (
-          <MyKanbanBoardColumn
-            activeCardId={activeCardId}
-            column={column}
-            key={column.id}
-            onAddCard={handleAddCard}
-            onCardBlur={handleCardBlur}
-            onCardKeyDown={handleCardKeyDown}
-            onDeleteCard={handleDeleteCard}
-            onDeleteColumn={handleDeleteColumn}
-            onMoveCardToColumn={handleMoveCardToColumn}
-            onUpdateCardTitle={handleUpdateCardTitle}
-            onUpdateColumnTitle={handleUpdateColumnTitle}
-          />
-        ) : (
-          <KanbanBoardColumnSkeleton key={column.id} />
-        )
-      )}
+      {columns.map((column) => (
+        /* Always render the component so the hooks are always registered */
+        <MyKanbanBoardColumn
+          key={column.id}
+          column={column}
+          jsLoaded={jsLoaded} // Pass this down!
+          activeCardId={activeCardId}
+          onAddCard={handleAddCard}
+          onCardBlur={handleCardBlur}
+          onCardKeyDown={handleCardKeyDown}
+          onDeleteCard={handleDeleteCard}
+          onDeleteColumn={handleDeleteColumn}
+          onMoveCardToColumn={handleMoveCardToColumn}
+          onUpdateCardTitle={handleUpdateCardTitle}
+          onUpdateColumnTitle={handleUpdateColumnTitle}
+        />
+      ))}
 
-      {/* Add a new column */}
-      {jsLoaded ? (
-        <MyNewKanbanBoardColumn onAddColumn={handleAddColumn} />
-      ) : (
-        <Skeleton className="h-9 w-10.5 flex-shrink-0" />
-      )}
+      {/* Do the same for the New Column component */}
+      <MyNewKanbanBoardColumn
+        onAddColumn={handleAddColumn}
+        jsLoaded={jsLoaded}
+      />
 
       <KanbanBoardExtraMargin />
     </KanbanBoard>
   );
-}
+};
 
 function MyKanbanBoardColumn({
   activeCardId,
   column,
+  jsLoaded,
   onAddCard,
   onCardBlur,
   onCardKeyDown,
@@ -547,11 +454,12 @@ function MyKanbanBoardColumn({
 }: {
   activeCardId: string;
   column: Column;
+  jsLoaded: boolean;
   onAddCard: (columnId: string, cardContent: string) => void;
   onCardBlur: () => void;
   onCardKeyDown: (
     event: KeyboardEvent<HTMLButtonElement>,
-    cardId: string
+    cardId: string,
   ) => void;
   onDeleteCard: (cardId: string) => void;
   onDeleteColumn: (columnId: string) => void;
@@ -563,6 +471,10 @@ function MyKanbanBoardColumn({
   const listReference = useRef<HTMLUListElement>(null);
   const moreOptionsButtonReference = useRef<HTMLButtonElement>(null);
   const { onDragCancel, onDragEnd } = useDndEvents();
+
+  if (!jsLoaded) {
+    return <KanbanBoardColumnSkeleton />;
+  }
 
   function scrollList() {
     if (listReference.current) {
@@ -594,12 +506,12 @@ function MyKanbanBoardColumn({
   function handleDropOverListItem(cardId: string) {
     return (
       dataTransferData: string,
-      dropDirection: KanbanBoardDropDirection
+      dropDirection: KanbanBoardDropDirection,
     ) => {
       const card = JSON.parse(dataTransferData) as Card;
       const cardIndex = column.items.findIndex(({ id }) => id === cardId);
       const currentCardIndex = column.items.findIndex(
-        ({ id }) => id === card.id
+        ({ id }) => id === card.id,
       );
 
       const baseIndex = dropDirection === "top" ? cardIndex : cardIndex + 1;
@@ -611,7 +523,7 @@ function MyKanbanBoardColumn({
       // Safety check to ensure targetIndex is within bounds
       const safeTargetIndex = Math.max(
         0,
-        Math.min(targetIndex, column.items.length)
+        Math.min(targetIndex, column.items.length),
       );
       const overCard = column.items[safeTargetIndex];
 
@@ -736,7 +648,7 @@ function MyKanbanBoardCard({
   onCardBlur: () => void;
   onCardKeyDown: (
     event: KeyboardEvent<HTMLButtonElement>,
-    cardId: string
+    cardId: string,
   ) => void;
   onDeleteCard: (cardId: string) => void;
   onUpdateCardTitle: (cardId: string, cardTitle: string) => void;
@@ -799,7 +711,7 @@ function MyKanbanBoardCard({
             input.setCustomValidity("");
           } else {
             input.setCustomValidity(
-              "Card content cannot be empty or just whitespace."
+              "Card content cannot be empty or just whitespace.",
             );
           }
         }}
@@ -924,7 +836,7 @@ function MyNewKanbanBoardCard({
                 input.setCustomValidity("");
               } else {
                 input.setCustomValidity(
-                  "Card content cannot be empty or just whitespace."
+                  "Card content cannot be empty or just whitespace.",
                 );
               }
             }}
@@ -978,12 +890,18 @@ function MyNewKanbanBoardCard({
 
 function MyNewKanbanBoardColumn({
   onAddColumn,
+  jsLoaded,
 }: {
   onAddColumn: (columnTitle?: string) => void;
+  jsLoaded: boolean;
 }) {
   const [showEditor, setShowEditor] = useState(false);
   const newColumnButtonReference = useRef<HTMLButtonElement>(null);
   const inputReference = useRef<HTMLInputElement>(null);
+
+  if (!jsLoaded) {
+    return <Skeleton className="h-9 w-10.5 flex-shrink-0" />;
+  }
 
   function handleAddColumnClick() {
     flushSync(() => {
