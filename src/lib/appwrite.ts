@@ -1,6 +1,6 @@
 import { Client, TablesDB, Account, ID, Query } from "appwrite";
 
-import type { KanbanList, KanbanTask } from "@/types/task";
+import type { KanbanColumn, KanbanListRow, KanbanTaskRow } from "@/types/task";
 
 const client = new Client()
   .setEndpoint(import.meta.env.VITE_APPWRITE_ENDPOINT)
@@ -17,16 +17,16 @@ const LISTS_TABLE_ID = import.meta.env.VITE_APPWRITE_LISTS_ID;
 const TASKS_TABLE_ID = import.meta.env.VITE_APPWRITE_TASKS_ID;
 const BOARD_ID = import.meta.env.VITE_APPWRITE_BOARD_ID;
 
-export const getBoardData = async () => {
+export const getBoardData = async (): Promise<KanbanColumn[]> => {
   // 1. Fetch Lists (Columns) - using listRows
-  const listsResponse = await tablesDB.listRows<KanbanList>({
+  const listsResponse = await tablesDB.listRows<KanbanListRow>({
     databaseId: DB_ID,
     tableId: LISTS_TABLE_ID,
     queries: [Query.equal("boardId", BOARD_ID), Query.orderAsc("position")],
   });
 
   // 2. Fetch Tasks (Rows) - using listRows
-  const tasksResponse = await tablesDB.listRows<KanbanTask>({
+  const tasksResponse = await tablesDB.listRows<KanbanTaskRow>({
     databaseId: DB_ID,
     tableId: TASKS_TABLE_ID,
     queries: [
@@ -37,11 +37,11 @@ export const getBoardData = async () => {
   });
 
   // 3. Grouping Logic (Note: response.documents is now response.rows)
-  const boardData = listsResponse.rows.map((list) => {
+  const boardData: KanbanColumn[] = listsResponse.rows.map((list) => {
     return {
       id: list.$id,
-      title: list.title,
-      color: list.color || "primary",
+      title: list.name,
+      color: (list as any).color ?? "primary",
       // Filter the tasks by listId
       items: tasksResponse.rows
         .filter((task) => task.listId === list.$id)

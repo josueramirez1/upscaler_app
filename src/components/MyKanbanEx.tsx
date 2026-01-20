@@ -56,8 +56,7 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip";
 import { getBoardData } from "@/lib/appwrite";
-import type { KanbanList } from "@/types/task";
-import { useParams } from "react-router";
+import type { KanbanColumn } from "@/types/task";
 
 // Types
 type Card = {
@@ -71,10 +70,6 @@ type Column = {
   color: KanbanBoardCircleColor;
   items: Card[];
 };
-
-interface BoardProps {
-  boardId: string;
-}
 
 export default function KanbanBoardPage() {
   return (
@@ -90,8 +85,8 @@ export default function KanbanBoardPage() {
   );
 }
 
-export const MyKanbanBoard: React.FC<BoardProps> = () => {
-  const [columns, setColumns] = useState<KanbanList[]>([]);
+export const MyKanbanBoard = () => {
+  const [columns, setColumns] = useState<KanbanColumn[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const scrollContainerReference = useRef<HTMLDivElement>(null);
   const [activeCardId, setActiveCardId] = useState<string>("");
