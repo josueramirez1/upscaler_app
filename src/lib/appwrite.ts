@@ -72,6 +72,14 @@ export const moveTask = async (
   });
 };
 
+export const deleteTask = async (taskId: string) => {
+  return await tablesDB.deleteRow({
+    databaseId: DB_ID,
+    tableId: TASKS_TABLE_ID,
+    rowId: taskId,
+  });
+};
+
 export const addTask = async (title: string, listId: string) => {
   const existingTasks = await tablesDB.listRows<KanbanTaskRow>({
     databaseId: DB_ID,

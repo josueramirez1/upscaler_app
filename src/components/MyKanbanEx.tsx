@@ -55,7 +55,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-import { getBoardData, addTask } from "@/lib/appwrite";
+import { getBoardData, addTask, deleteTask, moveTask } from "@/lib/appwrite";
 import type { KanbanColumn } from "@/types/task";
 
 // Types
@@ -183,6 +183,7 @@ export const MyKanbanBoard = () => {
   }
 
   function handleDeleteCard(cardId: string) {
+    deleteTask(cardId);
     setColumns((previousColumns) =>
       previousColumns.map((column) =>
         column.items.some((card) => card.id === cardId)
@@ -193,6 +194,7 @@ export const MyKanbanBoard = () => {
   }
 
   function handleMoveCardToColumn(columnId: string, index: number, card: Card) {
+    moveTask(card.id, columnId, index);
     setColumns((previousColumns) =>
       previousColumns.map((column) => {
         if (column.id === columnId) {
@@ -776,10 +778,10 @@ function MyNewKanbanBoardCard({
   const submitButtonReference = useRef<HTMLButtonElement>(null);
   const [showNewCardForm, setShowNewCardForm] = useState(false);
 
-  async function handleAddTask(t: string, listId: string, position: number) {
+  async function handleAddTask(t: string, listId: string) {
     if (!t) return;
 
-    await addTask(t, listId, position);
+    await addTask(t, listId);
     await getBoardData();
   }
 
