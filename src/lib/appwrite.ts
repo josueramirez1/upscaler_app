@@ -32,11 +32,11 @@ export const getBoardData = async (): Promise<KanbanColumn[]> => {
     queries: [
       Query.equal("boardId", BOARD_ID),
       Query.orderAsc("position"),
-      Query.limit(100),
+      Query.limit(255),
     ],
   });
 
-  // 3. Grouping Logic (Note: response.documents is now response.rows)
+  // 3. Grouping Logic
   const boardData: KanbanColumn[] = listsResponse.rows.map((list) => {
     return {
       id: list.$id,
@@ -61,9 +61,44 @@ export const moveTask = async (
   newPosition: number,
 ) => {
   // updateDocument is now updateRow
-  return await tablesDB.updateRow(DB_ID, TASKS_TABLE_ID, taskId, {
-    listId: newListId,
-    position: newPosition,
+  return await tablesDB.updateRow({
+    databaseId: DB_ID,
+    tableId: TASKS_TABLE_ID,
+    rowId: taskId,
+    data: {
+      listId: newListId,
+      position: newPosition,
+    },
+  });
+};
+
+export const addTask = async (title: string, listId: string) => {
+  const existingTasks = await tablesDB.listRows<KanbanTaskRow>({
+    databaseId: DB_ID,
+    tableId: TASKS_TABLE_ID,
+    queries: [
+      Query.equal("listId", listId),
+      Query.equal("boardId", BOARD_ID),
+      Query.orderDesc("position"),
+      Query.limit(1),
+    ],
+  });
+
+  const nextPosition =
+    existingTasks.rows.length > 0
+      ? (existingTasks.rows[0].position ?? 0) + 1
+      : 0;
+
+  return await tablesDB.createRow({
+    databaseId: DB_ID,
+    tableId: TASKS_TABLE_ID,
+    rowId: ID.unique(),
+    data: {
+      title,
+      listId,
+      boardId: BOARD_ID,
+      position: nextPosition,
+    },
   });
 };
 

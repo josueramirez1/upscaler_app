@@ -55,7 +55,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-import { getBoardData } from "@/lib/appwrite";
+import { getBoardData, addTask } from "@/lib/appwrite";
 import type { KanbanColumn } from "@/types/task";
 
 // Types
@@ -776,6 +776,13 @@ function MyNewKanbanBoardCard({
   const submitButtonReference = useRef<HTMLButtonElement>(null);
   const [showNewCardForm, setShowNewCardForm] = useState(false);
 
+  async function handleAddTask(t: string, listId: string, position: number) {
+    if (!t) return;
+
+    await addTask(t, listId, position);
+    await getBoardData();
+  }
+
   function handleAddCardClick() {
     flushSync(() => {
       setShowNewCardForm(true);
@@ -802,6 +809,8 @@ function MyNewKanbanBoardCard({
 
     flushSync(() => {
       onAddCard(column.id, cardContent.trim());
+      console.log(column.id);
+      handleAddTask(cardContent.trim(), column.id);
       setCardContent("");
     });
 
