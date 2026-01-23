@@ -1,25 +1,27 @@
 import {
   ArrowPathIcon,
   CloudArrowUpIcon,
+  EnvelopeIcon,
   FingerPrintIcon,
   LockClosedIcon,
 } from "@heroicons/react/24/outline";
+import { CircuitBoardIcon } from "lucide-react";
 
 const features = [
   {
-    name: "Push to deploy",
+    name: "In-House Communication",
     description:
       "Morbi viverra dui mi arcu sed. Tellus semper adipiscing suspendisse semper morbi. Odio urna massa nunc massa.",
-    icon: CloudArrowUpIcon,
+    icon: EnvelopeIcon,
   },
   {
-    name: "SSL certificates",
+    name: "Kanban Board",
     description:
       "Sit quis amet rutrum tellus ullamcorper ultricies libero dolor eget. Sem sodales gravida quam turpis enim lacus amet.",
-    icon: LockClosedIcon,
+    icon: CircuitBoardIcon,
   },
   {
-    name: "Simple queues",
+    name: "Mentor Coaching for team success",
     description:
       "Quisque est vel vulputate cursus. Risus proin diam nunc commodo. Lobortis auctor congue commodo diam neque.",
     icon: ArrowPathIcon,
@@ -32,16 +34,14 @@ const features = [
   },
 ];
 
-export default function Example() {
+export default function Features() {
   return (
     <div className="bg-white py-24 sm:py-32 dark:bg-gray-900">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base/7 font-semibold text-blue-600 dark:text-blue-400">
-            Deploy faster
-          </h2>
+          <h2 className="text-base/7 font-semibold text-blue-600 dark:text-blue-400"></h2>
           <p className="mt-2 text-4xl font-semibold tracking-tight text-pretty text-gray-900 sm:text-5xl lg:text-balance dark:text-white">
-            Everything you need to deploy your app
+            Everything you need for productivity success.
           </p>
           <p className="mt-6 text-lg/8 text-gray-700 dark:text-gray-300">
             Quis tellus eget adipiscing convallis sit sit eget aliquet quis.

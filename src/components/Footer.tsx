@@ -10,71 +10,63 @@ const Footer = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-8 border-t border-gray-100 pt-8 sm:grid-cols-2 lg:grid-cols-4 lg:pt-16">
+        <div className="grid grid-cols-1 gap-8 border-t border-gray-100 pt-8 sm:grid-cols-2 lg:grid-cols-4 lg:pt-16 ">
           <div>
-            <p className="font-medium text-gray-900">Services</p>
+            <p className="font-medium text-gray-900 dark:text-white">
+              Services & Features
+            </p>
 
             <ul className="mt-6 space-y-4 text-sm">
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75"
+                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
                 >
                   {" "}
-                  1on1 Coaching{" "}
+                  Email Hub{" "}
                 </a>
               </li>
 
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75"
+                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
                 >
                   {" "}
-                  Company Review{" "}
+                  Kanban Board{" "}
                 </a>
               </li>
 
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75"
+                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
                 >
                   {" "}
-                  Accounts Review{" "}
+                  Mentor Coaching{" "}
                 </a>
               </li>
 
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75"
+                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
                 >
                   {" "}
                   HR Consulting{" "}
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-700 transition hover:opacity-75"
-                >
-                  {" "}
-                  SEO Optimisation{" "}
                 </a>
               </li>
             </ul>
           </div>
 
           <div>
-            <p className="font-medium text-gray-900">Company</p>
+            <p className="font-medium text-gray-900 dark:text-white">Company</p>
 
             <ul className="mt-6 space-y-4 text-sm">
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75"
+                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
                 >
                   {" "}
                   About{" "}
@@ -84,7 +76,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75"
+                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
                 >
                   {" "}
                   Meet the Team{" "}
@@ -94,7 +86,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75"
+                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
                 >
                   {" "}
                   Accounts Review{" "}
@@ -104,13 +96,15 @@ const Footer = () => {
           </div>
 
           <div>
-            <p className="font-medium text-gray-900">Helpful Links</p>
+            <p className="font-medium text-gray-900 dark:text-white">
+              Helpful Links
+            </p>
 
             <ul className="mt-6 space-y-4 text-sm">
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75"
+                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
                 >
                   {" "}
                   Contact{" "}
@@ -120,7 +114,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75"
+                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
                 >
                   {" "}
                   FAQs{" "}
@@ -130,7 +124,7 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75"
+                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
                 >
                   {" "}
                   Live Chat{" "}
@@ -140,13 +134,13 @@ const Footer = () => {
           </div>
 
           <div>
-            <p className="font-medium text-gray-900">Legal</p>
+            <p className="font-medium text-gray-900 dark:text-white">Legal</p>
 
             <ul className="mt-6 space-y-4 text-sm">
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75"
+                  className="text-gray-700 dark:text-white transition hover:opacity-75"
                 >
                   {" "}
                   Accessibility{" "}
@@ -156,37 +150,28 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75"
+                  className="text-gray-700 dark:text-white transition hover:opacity-75"
                 >
                   {" "}
-                  Returns Policy{" "}
+                  Product Usage Policy{" "}
                 </a>
               </li>
 
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75"
+                  className="text-gray-700 dark:text-white transition hover:opacity-75"
                 >
                   {" "}
                   Refund Policy{" "}
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-700 transition hover:opacity-75"
-                >
-                  Hiring-3 Statistics
                 </a>
               </li>
             </ul>
           </div>
         </div>
 
-        <p className="text-xs text-gray-500">
-          © 2026. Company Name. All rights reserved.
+        <p className="text-xs text-gray-500 dark:text-white">
+          © 2026. Upscaler. All rights reserved.
         </p>
       </div>
     </footer>
