@@ -39,7 +39,7 @@ import {
   KanbanColorCircle,
   useDndEvents,
 } from "@/components/kanban";
-import { Button } from "~/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,14 +47,14 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
-import { Input } from "~/components/ui/input";
-import { Skeleton } from "~/components/ui/skeleton";
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from "~/components/ui/tooltip";
+} from "@/components/ui/tooltip";
 import { getBoardData, addTask, deleteTask, moveTask } from "@/lib/appwrite";
 import type { KanbanColumn } from "@/types/task";
 
@@ -67,7 +67,7 @@ type Card = {
 type Column = {
   id: string;
   title: string;
-  color: KanbanBoardCircleColor;
+  color: string;
   items: Card[];
 };
 
@@ -193,33 +193,38 @@ export const MyKanbanBoard = () => {
     );
   }
 
-  function handleMoveCardToColumn(columnId: string, index: number, card: Card) {
-    moveTask(card.id, columnId, index);
-    setColumns((previousColumns) =>
-      previousColumns.map((column) => {
+  async function handleMoveCardToColumn(
+    columnId: string,
+    index: number,
+    card: Card,
+  ) {
+    setColumns((prevColumns) => {
+      return prevColumns.map((column) => {
+        let updatedItems = column.items.filter((c) => c.id !== card.id);
+
         if (column.id === columnId) {
-          // Remove the card from the column (if it exists) before reinserting it.
-          const updatedItems = column.items.filter(({ id }) => id !== card.id);
-          return {
-            ...column,
-            items: [
-              // Items before the insertion index.
-              ...updatedItems.slice(0, index),
-              // Insert the card.
-              card,
-              // Items after the insertion index.
-              ...updatedItems.slice(index),
-            ],
-          };
+          updatedItems = [
+            ...updatedItems.slice(0, index),
+            card,
+            ...updatedItems.slice(index),
+          ];
+
+          updatedItems.forEach((item, pos) => {
+            moveTask(item.id, columnId, pos).catch((err) =>
+              console.error("Error updating task position:", err),
+            );
+          });
         } else {
-          // Remove the card from other columns.
-          return {
-            ...column,
-            items: column.items.filter(({ id }) => id !== card.id),
-          };
+          updatedItems.forEach((item, pos) => {
+            moveTask(item.id, column.id, pos).catch((err) =>
+              console.error("Error updating task position:", err),
+            );
+          });
         }
-      }),
-    );
+
+        return { ...column, items: updatedItems };
+      });
+    });
   }
 
   function handleUpdateCardTitle(cardId: string, cardTitle: string) {
@@ -267,7 +272,7 @@ export const MyKanbanBoard = () => {
     return { columnIndex: -1, cardIndex: -1 };
   }
 
-  function moveActiveCard(
+  async function moveActiveCard(
     cardId: string,
     direction: "ArrowLeft" | "ArrowRight" | "ArrowUp" | "ArrowDown",
   ) {
@@ -282,7 +287,6 @@ export const MyKanbanBoard = () => {
     switch (direction) {
       case "ArrowUp": {
         newCardIndex = Math.max(cardIndex - 1, 0);
-
         break;
       }
       case "ArrowDown": {
@@ -290,17 +294,14 @@ export const MyKanbanBoard = () => {
           cardIndex + 1,
           columns[columnIndex].items.length - 1,
         );
-
         break;
       }
       case "ArrowLeft": {
         newColumnIndex = Math.max(columnIndex - 1, 0);
-        // Keep same cardIndex if possible, or if out of range, insert at end
         newCardIndex = Math.min(
           newCardIndex,
           columns[newColumnIndex].items.length,
         );
-
         break;
       }
       case "ArrowRight": {
@@ -309,7 +310,6 @@ export const MyKanbanBoard = () => {
           newCardIndex,
           columns[newColumnIndex].items.length,
         );
-
         break;
       }
     }
@@ -319,8 +319,14 @@ export const MyKanbanBoard = () => {
       handleMoveCardToColumn(columns[newColumnIndex].id, newCardIndex, card);
     });
 
-    // Find the card's new position and announce it.
-    onDragOver(cardId, overId);
+    // Calculate overId AFTER the state update
+    // We need to find the card's position again after the move
+    const { columnIndex: updatedColumnIndex, cardIndex: updatedCardIndex } =
+      findCardPosition(cardId);
+    if (updatedColumnIndex !== -1 && updatedCardIndex !== -1) {
+      const overId = getOverId(columns[updatedColumnIndex], updatedCardIndex);
+      onDragOver(cardId, overId);
+    }
   }
 
   function handleCardKeyDown(
@@ -566,10 +572,11 @@ function MyKanbanBoardColumn({
         ) : (
           <>
             <KanbanBoardColumnTitle columnId={column.id}>
-              <KanbanColorCircle color={column.color} />
+              <KanbanColorCircle
+                color={column.color as KanbanBoardCircleColor}
+              />
               {column.title}
             </KanbanBoardColumnTitle>
-
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <KanbanBoardColumnIconButton ref={moreOptionsButtonReference}>
@@ -780,7 +787,6 @@ function MyNewKanbanBoardCard({
 
   async function handleAddTask(t: string, listId: string) {
     if (!t) return;
-
     await addTask(t, listId);
     await getBoardData();
   }
