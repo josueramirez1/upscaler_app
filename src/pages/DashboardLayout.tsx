@@ -6,7 +6,7 @@ export default function DashboardLayout() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="w-full h-full">
+      <main className="w-full h-full dark:bg-background bg-background">
         <SidebarTrigger />
         <Outlet />
       </main>
