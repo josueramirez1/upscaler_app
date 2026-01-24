@@ -4,7 +4,8 @@ import type { KanbanColumn, KanbanListRow, KanbanTaskRow } from "@/types/task";
 
 const client = new Client()
   .setEndpoint(
-    import.meta.env.VITE_APPWRITE_ENDPOINT || "https://cloud.appwrite.io/v1",
+    import.meta.env.VITE_APPWRITE_ENDPOINT ||
+      "https://sfo.cloud.appwrite.io/v1",
   )
   .setProject(import.meta.env.VITE_APPWRITE_PROJECT_ID);
 
