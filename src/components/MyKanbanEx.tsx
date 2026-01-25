@@ -101,7 +101,6 @@ export const MyKanbanBoard = () => {
     const fetchData = async () => {
       try {
         const data = await getBoardData();
-        console.log("Processed Board Data:", data);
         setColumns(data);
       } catch (error) {
         console.error("Error fetching board:", error);
@@ -817,7 +816,6 @@ function MyNewKanbanBoardCard({
 
     flushSync(() => {
       onAddCard(column.id, cardContent.trim());
-      console.log(column.id);
       handleAddTask(cardContent.trim(), column.id);
       setCardContent("");
     });

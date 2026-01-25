@@ -62,7 +62,6 @@ export function AppSidebar() {
   const navigate = useNavigate();
   const handleLogout: () => Promise<void> = async () => {
     try {
-      console.log("Session ended");
       await logout();
       navigate("/");
     } catch (error) {

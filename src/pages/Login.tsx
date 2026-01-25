@@ -1,5 +1,6 @@
 import { LoginForm } from "../components/login-form";
 import { Link } from "react-router";
+import logo from "../assets/logo.png";
 
 export default function LoginPage() {
   return (
@@ -7,7 +8,7 @@ export default function LoginPage() {
       <div className="flex flex-col gap-4 p-6 md:p-10">
         <div className="flex justify-center gap-2 md:justify-start">
           <Link to="/" className="flex items-center gap-2 font-medium">
-            <img className="size-6" src="../assets/upscaler-logo.png" alt="" />
+            <img className="size-6" src={logo} alt="" />
             Upscaler
           </Link>
         </div>
