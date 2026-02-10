@@ -63,5 +63,18 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
     "vite": "^7.2.4"
-  }
+  },
+  "description": "This project is an web application that gives a team the ability to add tasks, delete tasks, move tasks from one column to another to stay organized and complete tasks. This project has the potential to scale to an email hub as well as add more boards and create separate boards depending on login permissions.",
+  "main": "eslint.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josueramirez1/upscaler_app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/josueramirez1/upscaler_app/issues"
+  },
+  "homepage": "https://github.com/josueramirez1/upscaler_app#readme"
 }
