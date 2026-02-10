@@ -1,5 +1,7 @@
 import { Client, TablesDB, Account, ID, Query } from "appwrite";
 
+import { useAuth } from "@/contexts/useAuth";
+
 import type { KanbanColumn, KanbanListRow, KanbanTaskRow } from "@/types/task";
 
 const client = new Client()
@@ -16,13 +18,18 @@ const DB_ID = import.meta.env.VITE_APPWRITE_DATABASE_ID;
 const LISTS_TABLE_ID = import.meta.env.VITE_APPWRITE_LISTS_ID;
 const TASKS_TABLE_ID = import.meta.env.VITE_APPWRITE_TASKS_ID;
 const BOARD_ID = import.meta.env.VITE_APPWRITE_BOARD_ID;
+const BOARD_TABLES_ID = import.meta.env.VITE_APPWRITE_BOARDS_TABLES_ID
 
 export const getBoardData = async (): Promise<KanbanColumn[]> => {
   // 1. Fetch Lists (Columns) - using listRows
+const {boardId} = useAuth()
+
+if (!boardId) return [];
+
   const listsResponse = await tablesDB.listRows<KanbanListRow>({
     databaseId: DB_ID,
     tableId: LISTS_TABLE_ID,
-    queries: [Query.equal("boardId", BOARD_ID), Query.orderAsc("position")],
+    queries: [Query.equal("boardId", boardId), Query.orderAsc("position")],
   });
 
   // 2. Fetch Tasks (Rows) - using listRows
@@ -30,7 +37,7 @@ export const getBoardData = async (): Promise<KanbanColumn[]> => {
     databaseId: DB_ID,
     tableId: TASKS_TABLE_ID,
     queries: [
-      Query.equal("boardId", BOARD_ID),
+      Query.equal("boardId", boardId),
       Query.orderAsc("position"),
       Query.limit(255),
     ],
@@ -60,7 +67,6 @@ export const moveTask = async (
   newListId: string,
   newPosition: number,
 ) => {
-  // updateDocument is now updateRow
   return await tablesDB.updateRow({
     databaseId: DB_ID,
     tableId: TASKS_TABLE_ID,
@@ -81,12 +87,18 @@ export const deleteTask = async (taskId: string) => {
 };
 
 export const addTask = async (title: string, listId: string) => {
+
+const {boardId} = useAuth()
+
+if(!boardId) return []
+
+
   const existingTasks = await tablesDB.listRows<KanbanTaskRow>({
     databaseId: DB_ID,
     tableId: TASKS_TABLE_ID,
     queries: [
       Query.equal("listId", listId),
-      Query.equal("boardId", BOARD_ID),
+      Query.equal("boardId", boardId),
       Query.orderDesc("position"),
       Query.limit(1),
     ],
@@ -110,4 +122,29 @@ export const addTask = async (title: string, listId: string) => {
   });
 };
 
-export { client, account, ID };
+export const ensureUserBoard = async (userId: string) => {
+  const existing = await tablesDB.listRows({
+    databaseId: DB_ID,
+    tableId: BOARD_TABLES_ID,
+    queries: [Query.equal("ownerId", userId)],
+  });
+
+  if (existing.rows.length > 0) {
+    return existing.rows[0];
+  }
+
+  return await tablesDB.createRow({
+    databaseId: DB_ID,
+    tableId: BOARD_TABLES_ID,
+    rowId: ID.unique(),
+    data: {
+      name: "My Board",
+      ownerId: userId,
+    },
+  });
+}
+
+
+
+
+export { client, account, ID, Query, };

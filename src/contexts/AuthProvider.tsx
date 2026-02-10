@@ -1,5 +1,5 @@
 import { useState, useEffect, type ReactNode } from "react";
-import { account, ID } from "../lib/appwrite";
+import { account, ID, ensureUserBoard } from "../lib/appwrite";
 import { AuthContext } from "./AuthContext";
 import type { Models } from "appwrite";
 
@@ -7,14 +7,19 @@ type CurrentUser = Models.User<Models.Preferences> | null;
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<CurrentUser>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [boardId, setBoardId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   async function init() {
     try {
       const loggedIn = await account.get();
       setUser(loggedIn);
+
+      const board = await ensureUserBoard(loggedIn.$id);
+      setBoardId(board.$id);
     } catch {
       setUser(null);
+      setBoardId(null);
     } finally {
       setLoading(false);
     }
@@ -22,36 +27,45 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     try {
-      await account.createEmailPasswordSession({
-        email,
-        password,
-      });
+      await account.createEmailPasswordSession({ email, password });
+
+      const currentUser = await account.get();
+      setUser(currentUser);
+
+      const board = await ensureUserBoard(currentUser.$id);
+      setBoardId(board.$id);
     } catch (error) {
       console.error("There was a problem logging in", error);
     }
-
-    const currentUser = await account.get();
-    setUser(currentUser);
   };
 
   const logout = async () => {
     try {
-      await account.deleteSession({
-        sessionId: "current",
-      });
+      await account.deleteSession({ sessionId: "current" });
     } catch (error) {
       console.error("There was a problem logging out", error);
     }
 
     setUser(null);
+    setBoardId(null);
   };
 
   const register = async (email: string, password: string, name: string) => {
     try {
-      await account.create({ userId: ID.unique(), email, password, name });
+      await account.create({
+        userId: ID.unique(),
+        email,
+        password,
+        name,
+      });
+
       await account.createEmailPasswordSession({ email, password });
+
       const currentUser = await account.get();
       setUser(currentUser);
+
+      const board = await ensureUserBoard(currentUser.$id);
+      setBoardId(board.$id);
     } catch (error) {
       console.error("There was a problem registering", error);
     }
@@ -65,6 +79,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     <AuthContext.Provider
       value={{
         user,
+        boardId,
         loading,
         login,
         logout,

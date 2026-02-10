@@ -5,6 +5,7 @@ type CurrentUser = Models.User<Models.Preferences> | null;
 
 export interface AuthContextType {
   user: CurrentUser;
+  boardId: string | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
