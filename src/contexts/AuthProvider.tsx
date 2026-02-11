@@ -54,15 +54,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     try {
-      // Check if a session exists first
       await account.getSession({
         sessionId: "current",
       });
-      // If the line above doesn't throw an error, a session exists, so delete it
       await account.deleteSession({ sessionId: "current" });
-    } catch {
-      // If getSession fails, no session exists. Do nothing and move on!
-    }
+    } catch {}
 
     setUser(null);
     setBoardId(null);
