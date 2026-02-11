@@ -805,8 +805,8 @@ function MyNewKanbanBoardCard({
   column: Column;
   onAddCard: (columnId: string, cardContent: string) => void;
   scrollList: () => void;
-  boardId: string | null; // <--- Add this
-  user: any; // <--- Add this
+  boardId: string | null;
+  user: any;
   setColumns: React.Dispatch<React.SetStateAction<Column[]>>;
 }) {
   const [cardContent, setCardContent] = useState("");
