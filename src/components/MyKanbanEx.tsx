@@ -64,7 +64,6 @@ import {
 import type { KanbanColumn } from "@/types/task";
 import { useAuth } from "@/contexts/useAuth";
 
-
 type Card = {
   id: string;
   title: string;
@@ -141,7 +140,6 @@ export const MyKanbanBoard = () => {
   const handleAddColumn = async (title?: string) => {
     if (!title || !boardId || !user) return;
 
-    // 1. Update UI Instantly (Optimistic)
     flushSync(() => {
       setColumns((previousColumns) => [
         ...previousColumns,
@@ -158,15 +156,12 @@ export const MyKanbanBoard = () => {
     scrollRight();
 
     try {
-      // 2. Save to Appwrite
       await createColumn(title, boardId, columns.length, user.$id);
 
-      // 3. Re-sync with Database to get the real Appwrite ID
       const updatedData = await getBoardData(boardId);
       setColumns(updatedData);
     } catch (error) {
       console.error("Failed to save column:", error);
-      // Optional: Add logic here to remove the temp column if the save fails
     }
   };
 
@@ -269,8 +264,6 @@ export const MyKanbanBoard = () => {
   Moving cards with the keyboard.
   */
 
-  // This helper returns the appropriate overId after a card is placed.
-  // If there's another card below, return that card's id, otherwise return the column's id.
   function getOverId(column: Column, cardIndex: number): string {
     if (cardIndex < column.items.length - 1) {
       return column.items[cardIndex + 1].id;
@@ -342,8 +335,6 @@ export const MyKanbanBoard = () => {
       handleMoveCardToColumn(columns[newColumnIndex].id, newCardIndex, card);
     });
 
-    // Calculate overId AFTER the state update
-    // We need to find the card's position again after the move
     const { columnIndex: updatedColumnIndex, cardIndex: updatedCardIndex } =
       findCardPosition(cardId);
     if (updatedColumnIndex !== -1 && updatedCardIndex !== -1) {
@@ -370,8 +361,6 @@ export const MyKanbanBoard = () => {
           ? { columnId: columns[columnIndex].id, cardIndex }
           : null;
     } else if (activeCardId === cardId) {
-      // Card is already active.
-      // eslint-disable-next-line unicorn/prefer-switch
       if (key === " " || key === "Enter") {
         event.preventDefault();
         // Drop the card.
@@ -384,7 +373,6 @@ export const MyKanbanBoard = () => {
           const overId = getOverId(columns[columnIndex], cardIndex);
           onDragEnd(cardId, overId);
         } else {
-          // If we somehow can't find the card, just call onDragEnd with cardId.
           onDragEnd(cardId);
         }
 
@@ -833,7 +821,7 @@ function MyNewKanbanBoardCard({
     user: any,
     setColumns: (data: any) => void,
   ) {
-    if (!t || !boardId || !user) return; // Guard clause to ensure we have data
+    if (!t || !boardId || !user) return;
 
     try {
       // Pass the IDs required by your updated addTask function

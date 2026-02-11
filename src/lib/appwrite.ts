@@ -21,10 +21,8 @@ const LISTS_TABLE_ID = import.meta.env.VITE_APPWRITE_LISTS_ID;
 const TASKS_TABLE_ID = import.meta.env.VITE_APPWRITE_TASKS_ID;
 const BOARDS_TABLE_ID = import.meta.env.VITE_APPWRITE_BOARDS_TABLE_ID;
 
-// --- UTILITY: Ensure User Board ---
 export const ensureUserBoard = async (userId: string) => {
   try {
-    // Check if the user already has a board using tablesDB.listRows
     const existingBoards = await tablesDB.listRows({
       databaseId: DB_ID,
       tableId: BOARDS_TABLE_ID,
@@ -42,14 +40,13 @@ export const ensureUserBoard = async (userId: string) => {
       Permission.delete(Role.user(userId)),
     ];
 
-    // Create the Board Document using tablesDB.createRow
     const newBoard = await tablesDB.createRow({
       databaseId: DB_ID,
       tableId: BOARDS_TABLE_ID,
       rowId: ID.unique(),
       data: {
         ownerId: userId,
-        name: "My Personal Board", // Ensure 'title' exists in Appwrite Boards attributes!
+        name: "My Personal Board",
       },
       permissions: privatePermissions,
     });
@@ -62,7 +59,6 @@ export const ensureUserBoard = async (userId: string) => {
       { title: "Done", position: 4, color: "green" },
     ];
 
-    // Create Default Columns using tablesDB.createRow
     await Promise.all(
       defaultColumns.map((col) =>
         tablesDB.createRow({
@@ -144,7 +140,6 @@ export const addTask = async (
       ? (existingTasks.rows[0].position ?? 0) + 1
       : 0;
 
-  // 2. Define the same private permissions we used for the board
   const permissions = [
     Permission.read(Role.user(userId)),
     Permission.write(Role.user(userId)),
@@ -152,7 +147,6 @@ export const addTask = async (
     Permission.delete(Role.user(userId)),
   ];
 
-  // 3. CREATE the new task row
   return await tablesDB.createRow({
     databaseId: DB_ID,
     tableId: TASKS_TABLE_ID,
@@ -163,7 +157,7 @@ export const addTask = async (
       boardId,
       position: nextPosition,
     },
-    permissions, // This keeps the task private to the owner
+    permissions,
   });
 };
 
