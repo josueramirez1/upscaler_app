@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-null */
 import { createId } from "@paralleldrive/cuid2";
 import {
   MoreHorizontalIcon,
@@ -55,8 +54,15 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { getBoardData, addTask, deleteTask, moveTask } from "@/lib/appwrite";
+import {
+  getBoardData,
+  addTask,
+  deleteTask,
+  moveTask,
+  createColumn,
+} from "@/lib/appwrite";
 import type { KanbanColumn } from "@/types/task";
+import { useAuth } from "@/contexts/useAuth";
 
 // Types
 type Card = {
@@ -71,6 +77,7 @@ type Column = {
   items: Card[];
 };
 
+//react ui
 export default function KanbanBoardPage() {
   return (
     <div className="grid h-screen grid-rows-[var(--header-height)_1fr_6rem] overflow-x-hidden sm:grid-rows-[var(--header-height)_1fr_var(--header-height)]">
@@ -86,6 +93,8 @@ export default function KanbanBoardPage() {
 }
 
 export const MyKanbanBoard = () => {
+  const { boardId, user } = useAuth();
+
   const [columns, setColumns] = useState<KanbanColumn[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const scrollContainerReference = useRef<HTMLDivElement>(null);
@@ -100,8 +109,10 @@ export const MyKanbanBoard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const data = await getBoardData();
-        setColumns(data);
+        if (boardId) {
+          const data = await getBoardData(boardId);
+          setColumns(data);
+        }
       } catch (error) {
         console.error("Error fetching board:", error);
       } finally {
@@ -110,7 +121,7 @@ export const MyKanbanBoard = () => {
     };
 
     fetchData();
-  }, []);
+  }, [boardId]);
 
   if (isLoading) return <div>Loading Board...</div>;
 
@@ -127,23 +138,36 @@ export const MyKanbanBoard = () => {
   Column logic
   */
 
-  const handleAddColumn = (title?: string) => {
-    if (title) {
-      flushSync(() => {
-        setColumns((previousColumns) => [
-          ...previousColumns,
-          {
-            id: createId(),
-            title,
-            color:
-              KANBAN_BOARD_CIRCLE_COLORS[previousColumns.length] ?? "primary",
-            items: [],
-          },
-        ]);
-      });
-    }
+  const handleAddColumn = async (title?: string) => {
+    if (!title || !boardId || !user) return;
+
+    // 1. Update UI Instantly (Optimistic)
+    flushSync(() => {
+      setColumns((previousColumns) => [
+        ...previousColumns,
+        {
+          id: "temp-id-" + Date.now(), // Temporary ID until refresh
+          title,
+          color:
+            KANBAN_BOARD_CIRCLE_COLORS[previousColumns.length] ?? "primary",
+          items: [],
+        },
+      ]);
+    });
 
     scrollRight();
+
+    try {
+      // 2. Save to Appwrite
+      await createColumn(title, boardId, columns.length, user.$id);
+
+      // 3. Re-sync with Database to get the real Appwrite ID
+      const updatedData = await getBoardData(boardId);
+      setColumns(updatedData);
+    } catch (error) {
+      console.error("Failed to save column:", error);
+      // Optional: Add logic here to remove the temp column if the save fails
+    }
   };
 
   function handleDeleteColumn(columnId: string) {
@@ -419,6 +443,9 @@ export const MyKanbanBoard = () => {
           column={column}
           jsLoaded={jsLoaded} // Pass this down!
           activeCardId={activeCardId}
+          boardId={boardId}
+          user={user}
+          setColumns={setColumns}
           onAddCard={handleAddCard}
           onCardBlur={handleCardBlur}
           onCardKeyDown={handleCardKeyDown}
@@ -453,10 +480,16 @@ function MyKanbanBoardColumn({
   onMoveCardToColumn,
   onUpdateCardTitle,
   onUpdateColumnTitle,
+  boardId,
+  user,
+  setColumns,
 }: {
   activeCardId: string;
   column: Column;
   jsLoaded: boolean;
+  boardId: string | null;
+  user: any;
+  setColumns: React.Dispatch<React.SetStateAction<KanbanColumn[]>>;
   onAddCard: (columnId: string, cardContent: string) => void;
   onCardBlur: () => void;
   onCardKeyDown: (
@@ -633,6 +666,9 @@ function MyKanbanBoardColumn({
         column={column}
         onAddCard={onAddCard}
         scrollList={scrollList}
+        boardId={boardId}
+        user={user}
+        setColumns={setColumns}
       />
     </KanbanBoardColumn>
   );
@@ -774,20 +810,41 @@ function MyNewKanbanBoardCard({
   column,
   onAddCard,
   scrollList,
+  boardId,
+  user,
+  setColumns,
 }: {
   column: Column;
   onAddCard: (columnId: string, cardContent: string) => void;
   scrollList: () => void;
+  boardId: string | null; // <--- Add this
+  user: any; // <--- Add this
+  setColumns: React.Dispatch<React.SetStateAction<Column[]>>;
 }) {
   const [cardContent, setCardContent] = useState("");
   const newCardButtonReference = useRef<HTMLButtonElement>(null);
   const submitButtonReference = useRef<HTMLButtonElement>(null);
   const [showNewCardForm, setShowNewCardForm] = useState(false);
 
-  async function handleAddTask(t: string, listId: string) {
-    if (!t) return;
-    await addTask(t, listId);
-    await getBoardData();
+  async function handleAddTask(
+    t: string,
+    listId: string,
+    boardId: string,
+    user: any,
+    setColumns: (data: any) => void,
+  ) {
+    if (!t || !boardId || !user) return; // Guard clause to ensure we have data
+
+    try {
+      // Pass the IDs required by your updated addTask function
+      await addTask(t, listId, boardId, user.$id);
+
+      // Refresh the board data to show the new task
+      const updatedData = await getBoardData(boardId);
+      setColumns(updatedData);
+    } catch (error) {
+      console.error("Error adding task:", error);
+    }
   }
 
   function handleAddCardClick() {
@@ -813,10 +870,11 @@ function MyNewKanbanBoardCard({
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const trimmedContent = cardContent.trim();
 
     flushSync(() => {
-      onAddCard(column.id, cardContent.trim());
-      handleAddTask(cardContent.trim(), column.id);
+      onAddCard(column.id, trimmedContent);
+      handleAddTask(trimmedContent, column.id, boardId!, user, setColumns);
       setCardContent("");
     });
 

@@ -27,6 +27,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (email: string, password: string) => {
     try {
+      try {
+        // Only attempt to delete if we think we might have a user
+        const currentSession = await account.getSession({
+          sessionId: "current",
+        });
+        if (currentSession) {
+          await account.deleteSession({ sessionId: "current" });
+        }
+      } catch {
+        // If getSession fails, it means no session exists.
+        // We can just proceed without doing anything.
+      }
+
       await account.createEmailPasswordSession({ email, password });
 
       const currentUser = await account.get();
@@ -41,9 +54,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     try {
+      // Check if a session exists first
+      await account.getSession({
+        sessionId: "current",
+      });
+      // If the line above doesn't throw an error, a session exists, so delete it
       await account.deleteSession({ sessionId: "current" });
-    } catch (error) {
-      console.error("There was a problem logging out", error);
+    } catch {
+      // If getSession fails, no session exists. Do nothing and move on!
     }
 
     setUser(null);
