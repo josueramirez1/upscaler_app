@@ -64,7 +64,7 @@ import {
 import type { KanbanColumn } from "@/types/task";
 import { useAuth } from "@/contexts/useAuth";
 
-// Types
+
 type Card = {
   id: string;
   title: string;
