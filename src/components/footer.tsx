@@ -1,95 +1,44 @@
+import logo from "../assets/logo.png";
+
 const Footer = () => {
   return (
-    <footer className="bg-background text-foreground">
+    <footer className="bg-background text-foreground border-t border-muted">
       <div className="mx-auto max-w-7xl space-y-8 px-4 py-16 sm:px-6 lg:space-y-16 lg:px-8">
         <div className="sm:flex sm:items-center sm:justify-between">
           <img
-            src="../public/upscaler-logo.png"
-            className="w-auto h-10"
-            alt=""
+            src={logo} // Updated to standard public folder path
+            className="w-auto h-8  opacity-70 hover:opacity-100 transition-opacity"
+            alt="Upscaler Logo"
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-8 border-t border-gray-100 pt-8 sm:grid-cols-2 lg:grid-cols-4 lg:pt-16 ">
+        <div className="grid grid-cols-1 gap-8 border-t border-gray-100 dark:border-white/10 pt-8 sm:grid-cols-2 lg:grid-cols-4 lg:pt-16">
           <div>
-            <p className="font-medium text-gray-900 dark:text-white">
-              Services & Features
-            </p>
+            <p className="font-medium text-gray-900 dark:text-white">Product</p>
 
             <ul className="mt-6 space-y-4 text-sm">
               <li>
                 <a
-                  href="#"
-                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
+                  href="#features"
+                  className="text-gray-600 transition hover:text-primary dark:text-gray-400"
                 >
-                  {" "}
-                  Email Hub{" "}
+                  Kanban Boards
                 </a>
               </li>
-
+              <li>
+                <a
+                  href="#features"
+                  className="text-gray-600 transition hover:text-primary dark:text-gray-400"
+                >
+                  Internal Inbox
+                </a>
+              </li>
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
+                  className="text-gray-600 transition hover:text-primary dark:text-gray-400"
                 >
-                  {" "}
-                  Kanban Board{" "}
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
-                >
-                  {" "}
-                  Mentor Coaching{" "}
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
-                >
-                  {" "}
-                  HR Consulting{" "}
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <p className="font-medium text-gray-900 dark:text-white">Company</p>
-
-            <ul className="mt-6 space-y-4 text-sm">
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
-                >
-                  {" "}
-                  About{" "}
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
-                >
-                  {" "}
-                  Meet the Team{" "}
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
-                >
-                  {" "}
-                  Accounts Review{" "}
+                  Dashboard
                 </a>
               </li>
             </ul>
@@ -97,37 +46,49 @@ const Footer = () => {
 
           <div>
             <p className="font-medium text-gray-900 dark:text-white">
-              Helpful Links
+              Resources
             </p>
 
             <ul className="mt-6 space-y-4 text-sm">
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
+                  className="text-gray-600 transition hover:text-primary dark:text-gray-400"
                 >
-                  {" "}
-                  Contact{" "}
+                  Documentation
                 </a>
               </li>
+              <li>
+                <a
+                  href="https://github.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-gray-600 transition hover:text-primary dark:text-gray-400"
+                >
+                  GitHub Repository
+                </a>
+              </li>
+            </ul>
+          </div>
 
+          <div>
+            <p className="font-medium text-gray-900 dark:text-white">Connect</p>
+
+            <ul className="mt-6 space-y-4 text-sm">
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
+                  className="text-gray-600 transition hover:text-primary dark:text-gray-400"
                 >
-                  {" "}
-                  FAQs{" "}
+                  LinkedIn
                 </a>
               </li>
-
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 transition hover:opacity-75 dark:text-white"
+                  className="text-gray-600 transition hover:text-primary dark:text-gray-400"
                 >
-                  {" "}
-                  Live Chat{" "}
+                  Portfolio
                 </a>
               </li>
             </ul>
@@ -140,38 +101,26 @@ const Footer = () => {
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 dark:text-white transition hover:opacity-75"
+                  className="text-gray-600 transition hover:text-primary dark:text-gray-400"
                 >
-                  {" "}
-                  Accessibility{" "}
+                  Accessibility Statement
                 </a>
               </li>
-
               <li>
                 <a
                   href="#"
-                  className="text-gray-700 dark:text-white transition hover:opacity-75"
+                  className="text-gray-600 transition hover:text-primary dark:text-gray-400"
                 >
-                  {" "}
-                  Product Usage Policy{" "}
-                </a>
-              </li>
-
-              <li>
-                <a
-                  href="#"
-                  className="text-gray-700 dark:text-white transition hover:opacity-75"
-                >
-                  {" "}
-                  Refund Policy{" "}
+                  Privacy Policy
                 </a>
               </li>
             </ul>
           </div>
         </div>
 
-        <p className="text-xs text-gray-500 dark:text-white">
-          © 2026. Upscaler. All rights reserved.
+        <p className="text-xs text-gray-500 dark:text-gray-400">
+          © {new Date().getFullYear()} Upscaler. Built by [Your Name]. All
+          rights reserved.
         </p>
       </div>
     </footer>

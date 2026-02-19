@@ -1,21 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router"; // Ensure this matches your router setup
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import logo from "../assets/logo.png";
 
 const navigation = [
-  { name: "Services", href: "#" },
-  { name: "Features", href: "#" },
-  { name: "Company", href: "#" },
+  { name: "Features", href: "#features" },
+  { name: "Why Upscaler", href: "#" },
+  { name: "Documentation", href: "#" },
 ];
 
 export default function Hero() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <div className="bg-background  text-foreground">
+    <div className="bg-background text-foreground">
       <header className="absolute inset-x-0 top-0 z-50">
         <nav
           aria-label="Global"
@@ -24,11 +25,7 @@ export default function Hero() {
           <div className="flex lg:flex-1">
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Upscaler</span>
-              <img
-                alt=""
-                src="../public/upscaler-logo.png"
-                className="h-8 w-auto dark:hidden"
-              />
+              <img alt="Upscaler Logo" src={logo} className="h-8 w-auto" />
             </a>
           </div>
           <div className="flex lg:hidden">
@@ -46,7 +43,7 @@ export default function Hero() {
               <a
                 key={item.name}
                 href={item.href}
-                className="text-sm/6 font-semibold text-gray-900 dark:text-white"
+                className="text-sm/6 font-semibold text-gray-900 dark:text-white hover:text-primary transition-colors"
               >
                 {item.name}
               </a>
@@ -55,7 +52,7 @@ export default function Hero() {
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             <Link
               to="/login"
-              className="text-sm/6 font-semibold text-gray-900 dark:text-white"
+              className="text-sm/6 font-semibold text-gray-900 dark:text-white hover:text-primary transition-colors"
             >
               Log in <span aria-hidden="true">&rarr;</span>
             </Link>
@@ -70,10 +67,10 @@ export default function Hero() {
           <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10 dark:bg-gray-900 dark:sm:ring-gray-100/10">
             <div className="flex items-center justify-between">
               <a href="#" className="-m-1.5 p-1.5">
-                <span className="sr-only">Your Company</span>
+                <span className="sr-only">Upscaler</span>
                 <img
-                  alt=""
-                  src="../public/upscaler-logo.png"
+                  alt="Upscaler Logo"
+                  src="/upscaler-logo.png"
                   className="h-8 w-auto not-dark:hidden"
                 />
               </a>
@@ -93,6 +90,7 @@ export default function Hero() {
                     <a
                       key={item.name}
                       href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
                       className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
                     >
                       {item.name}
@@ -102,6 +100,7 @@ export default function Hero() {
                 <div className="py-6">
                   <Link
                     to="/login"
+                    onClick={() => setMobileMenuOpen(false)}
                     className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50 dark:text-white dark:hover:bg-white/5"
                   >
                     Log in
@@ -118,16 +117,16 @@ export default function Hero() {
           aria-hidden="true"
           className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
         ></div>
-        <div className="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
+        <div className="mx-auto max-w-2xl py-32 sm:py-32 lg:py-32">
           <div className="hidden sm:mb-8 sm:flex sm:justify-center">
             <div
               className="relative rounded-full px-3 py-1 text-sm/6 
-            text-primary-foregound drk:text-secondary-foregrounda ring-1 ring-gray-900/10 hover:ring-gray-900/20  dark:ring-white/10 dark:hover:ring-white/20 outline-1"
+            text-primary-foreground dark:text-secondary-foreground ring-1 ring-gray-900/10 hover:ring-gray-900/20 dark:ring-white/10 dark:hover:ring-white/20 outline-1"
             >
-              Announcing our new features!{" "}
+              Announcing our new Internal Inbox!{" "}
               <a
-                href="#"
-                className="font-semibold primary dark:text-muted-foreground"
+                href="#features"
+                className="font-semibold text-primary dark:text-primary-foreground hover:underline"
               >
                 <span aria-hidden="true" className="absolute inset-0" />
                 Read more <span aria-hidden="true">&rarr;</span>
@@ -136,23 +135,23 @@ export default function Hero() {
           </div>
           <div className="text-center">
             <h1 className="text-5xl font-semibold tracking-tight text-balance text-gray-900 sm:text-7xl dark:text-white">
-              Take Your Business to the Next Level
+              Upscale your output. Simplify your stack.
             </h1>
             <p className="mt-8 text-lg font-medium text-pretty text-gray-500 sm:text-xl/8 dark:text-gray-400">
-              Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui
-              lorem cupidatat commodo. Elit sunt amet fugiat veniam occaecat.
+              Upscaler is the all-in-one productivity suite built for speed.
+              Manage tasks with our real-time Kanban boards and communicate
+              effortlessly with our integrated internal inbox.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <a
-                href="#"
-                className="rounded-md bg-foreground px-3.5 py-2.5 text-sm font-semibold text-background shadow-xs hover:bg-accent-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 dark:bg-foreground dark:hover:bg-accent-foreground dark:focus-visible:outline-blue-400
-                dark:text-background"
+              <Link
+                to="/login"
+                className="rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-primary-foreground shadow-xs hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary transition-colors"
               >
-                Get started
-              </a>
+                Enter Workspace
+              </Link>
               <a
-                href="#"
-                className="text-sm font-semibold text-gray-900 shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2   rounded-md px-3.5 py-2.5 dark:text-white outline-1"
+                href="#features"
+                className="text-sm font-semibold text-gray-900 shadow-xs focus-visible:outline-2 focus-visible:outline-offset-2 rounded-md px-3.5 py-2.5 dark:text-white hover:bg-muted/50 transition-colors"
               >
                 Learn more <span aria-hidden="true">→</span>
               </a>
