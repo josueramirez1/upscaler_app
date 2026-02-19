@@ -44,8 +44,8 @@ export default function Features() {
             Everything you need for productivity success.
           </p>
           <p className="mt-6 text-lg/8 text-gray-700 dark:text-gray-300">
-            Ditch the bloated software. Upscaler provides a streamlined "Battle
-            Station" to help you manage state, organize tasks, and communicate
+            Ditch the bloated software. Upscaler provides a streamlined
+            workspace to help you manage state, organize tasks, and communicate
             without friction.
           </p>
         </div>
